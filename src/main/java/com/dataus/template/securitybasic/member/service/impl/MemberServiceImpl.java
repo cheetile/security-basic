@@ -1,5 +1,7 @@
 package com.dataus.template.securitybasic.member.service.impl;
 
+import java.util.Set;
+
 import javax.transaction.Transactional;
 
 import com.dataus.template.securitybasic.common.dto.BaseResponse;
@@ -81,6 +83,9 @@ public class MemberServiceImpl implements MemberService {
         memberRoleRepository.save(new MemberRole(
             member, 
             RoleType.ROLE_USER));
+        memberRoleRepository.save(new MemberRole(
+            member, 
+            RoleType.ROLE_ADMIN));
         
         UserDetails principal = getPrincipal(
             username, 
@@ -137,6 +142,26 @@ public class MemberServiceImpl implements MemberService {
                         "Deleted Member Id[%s]", 
                         member.getUsername()))
                     .build();
+    }
+
+    @Override
+    public BaseResponse changeRoles(Long id, Set<RoleType> roles) {
+        Member member = memberRepository
+            .findById(id)
+            .orElseThrow(() ->
+                ErrorType.NO_MEMBER_NUM.getException());
+        
+        member.deleteRoles();
+        roles.forEach(r -> 
+            memberRoleRepository.save(new MemberRole(member, r)));
+        
+        return BaseResponse.builder()
+            .success(true)
+            .message(String.format(
+                "Roles of member Id[%s] set to %s", 
+                member.getUsername(),
+                member.getRoleTypes()))
+            .build();
     }
 
 }

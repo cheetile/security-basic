@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import com.dataus.template.securitybasic.common.entity.BaseEntity;
@@ -45,14 +44,6 @@ public class MemberRole extends BaseEntity {
         this.role = role;
 
         member.getRoles().add(this);
-    }
-
-    @PrePersist
-    public void prePersist() {
-        String username = member.getUsername();
-        
-        this.setCreatedBy(username);
-        this.setLastModifiedBy(username);
     }
     
 }

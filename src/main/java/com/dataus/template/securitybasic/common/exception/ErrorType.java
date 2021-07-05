@@ -25,7 +25,7 @@ public enum ErrorType {
 
     // 404 NOT_FOUND
     UNAVAILABLE_PAGE(NOT_FOUND, "This page not found"),
-    NO_MEMBER_NUM(NOT_FOUND, "This member number doesn't exist")
+    NO_MEMBER_NUM(NOT_FOUND, "This member number doesn't exist"),
 
     // 409 CONFLICT
     ;

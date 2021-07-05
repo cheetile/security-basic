@@ -13,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import com.dataus.template.securitybasic.common.entity.BaseEntity;
@@ -37,10 +36,9 @@ import lombok.NoArgsConstructor;
 public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "login_id", length = 30)
+    @Column(length = 30)
     private String username;
 
     @Column(length = 100)
@@ -62,12 +60,6 @@ public class Member extends BaseEntity {
         this.email = email;
     }
 
-    @PrePersist
-    public void prePersist() {        
-        this.setCreatedBy(username);
-        this.setLastModifiedBy(username);
-    }
-
     public Set<RoleType> getRoleTypes() {
         return this.roles.stream()
                 .map(MemberRole::getRole)
@@ -83,6 +75,11 @@ public class Member extends BaseEntity {
     public void modify(ModifyRequest modifyRequest) {
         this.name = modifyRequest.getName();
         this.email = modifyRequest.getEmail();
+    }
+
+    public void deleteRoles() {
+        this.roles.forEach(MemberRole::delete);
+        this.roles.clear();
     }
 
 }
