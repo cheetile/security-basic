@@ -60,12 +60,6 @@ public class Member extends BaseEntity {
         this.email = email;
     }
 
-    public Set<RoleType> getRoleTypes() {
-        return this.roles.stream()
-                .map(MemberRole::getRole)
-                .collect(Collectors.toSet());
-    }
-
     @Override
     public void delete() {
         this.roles.forEach(MemberRole::delete);
@@ -75,6 +69,12 @@ public class Member extends BaseEntity {
     public void modify(ModifyRequest modifyRequest) {
         this.name = modifyRequest.getName();
         this.email = modifyRequest.getEmail();
+    }
+    
+    public Set<RoleType> getRoleTypes() {
+        return this.roles.stream()
+                .map(MemberRole::getRole)
+                .collect(Collectors.toSet());
     }
 
     public void deleteRoles() {

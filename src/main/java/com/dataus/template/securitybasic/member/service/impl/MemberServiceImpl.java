@@ -71,7 +71,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponse register(RegisterRequest registerRequest) {
         String username = registerRequest.getUsername();
         if(existsUsername(username).isSuccess()) {
-            throw ErrorType.REGISTERED_ID.getException();
+            throw ErrorType.REGISTERED_USERNAME.getException();
         }
 
         Member member = memberRepository.save(new Member(
@@ -83,9 +83,6 @@ public class MemberServiceImpl implements MemberService {
         memberRoleRepository.save(new MemberRole(
             member, 
             RoleType.ROLE_USER));
-        memberRoleRepository.save(new MemberRole(
-            member, 
-            RoleType.ROLE_ADMIN));
         
         UserDetails principal = getPrincipal(
             username, 
@@ -96,26 +93,12 @@ public class MemberServiceImpl implements MemberService {
         return MemberResponse.of(principal, jwt);
     } 
 
-    private UserDetails getPrincipal(String username, String password) {
-        Authentication authentication = authenticationManager
-            .authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    username, 
-                    password));
-        
-        SecurityContextHolder
-            .getContext()
-            .setAuthentication(authentication);
-        
-        return (UserDetails) authentication.getPrincipal();
-    }
-
     @Override
     public BaseResponse modifyMember(Long id, ModifyRequest modifyRequest) {
         Member member = memberRepository
             .findById(id)
             .orElseThrow(() ->
-                ErrorType.NO_MEMBER_NUM.getException());
+                ErrorType.NO_MEMBER_ID.getException());
 
         member.modify(modifyRequest);        
         
@@ -132,7 +115,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository
             .findById(id)
             .orElseThrow(() ->
-                ErrorType.NO_MEMBER_NUM.getException());
+                ErrorType.NO_MEMBER_ID.getException());
 
         member.delete();
            
@@ -149,7 +132,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository
             .findById(id)
             .orElseThrow(() ->
-                ErrorType.NO_MEMBER_NUM.getException());
+                ErrorType.NO_MEMBER_ID.getException());
         
         member.deleteRoles();
         roles.forEach(r -> 
@@ -162,6 +145,20 @@ public class MemberServiceImpl implements MemberService {
                 member.getUsername(),
                 member.getRoleTypes()))
             .build();
+    }
+
+    private UserDetails getPrincipal(String username, String password) {
+        Authentication authentication = authenticationManager
+            .authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    username, 
+                    password));
+        
+        SecurityContextHolder
+            .getContext()
+            .setAuthentication(authentication);
+        
+        return (UserDetails) authentication.getPrincipal();
     }
 
 }

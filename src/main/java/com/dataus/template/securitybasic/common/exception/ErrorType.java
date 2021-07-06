@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public enum ErrorType {
 
     // 400 BAD_REQUEST
-    REGISTERED_ID(BAD_REQUEST, "This id already registered"),
+    REGISTERED_USERNAME(BAD_REQUEST, "This username already registered"),
 
     // 401 UNAUTHORIZED
     UNAUTHORIZED_MEMBER(UNAUTHORIZED, "Failed to authorize"),
@@ -25,7 +25,7 @@ public enum ErrorType {
 
     // 404 NOT_FOUND
     UNAVAILABLE_PAGE(NOT_FOUND, "This page not found"),
-    NO_MEMBER_NUM(NOT_FOUND, "This member number doesn't exist"),
+    NO_MEMBER_ID(NOT_FOUND, "This member id doesn't exist"),
 
     // 409 CONFLICT
     ;
